@@ -15,22 +15,25 @@ class MyLoginPage extends StatelessWidget {
     return Scaffold(
        body: Stack(
         children: <Widget>[
-        //   Container(
-        //   color: Colors.blueAccent,
-        // ),
-
       ImageWithGradient(_backgroundImage),
       ListView(
               children:<Widget>[ Column(
           children: <Widget>[
             HeadingWidget(),
-            Container(
-              padding: EdgeInsets.all(20.0),
-            ),
+            SizedBox(height: 10.0),
+            // Container(
+            //   padding: EdgeInsets.all(20.0),
+            // ),
             Text(_subheading,
                 style: TextStyle(fontSize: 30.0, color: Colors.white)),
+                SizedBox(height: 10.0),
+                _GoogleLoginBtn(),
+                SizedBox(height: 8.0),
+                Text('OR',
+                style: TextStyle(color: Colors.white),
+                ),
             Container(
-              margin: EdgeInsets.all(50.0),
+              margin: EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 25.0),
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
@@ -72,9 +75,6 @@ class MyLoginPage extends StatelessWidget {
                 ),
               ),
             ),
-            // Container(
-            //   padding: EdgeInsets.all(10.0),
-            // ),
             Text(_footer,
                 style: TextStyle(
                     fontSize: 30.0,
@@ -89,6 +89,37 @@ class MyLoginPage extends StatelessWidget {
     ]
       
        ),
+    );
+  }
+  Widget _GoogleLoginBtn(){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(40.0, 5.0, 40.0, 0.0),
+      child: Material(
+        borderRadius: BorderRadius.circular(30.0),
+        child:MaterialButton(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Log in with   ',
+             style: TextStyle(fontSize: 20.0),
+            ),
+            Image(image: AssetImage('images/google_logo.png'),
+             height: 60.0,
+             width: 40.0,
+             fit: BoxFit.contain,
+            )
+          ],
+           
+        ),
+        splashColor: Colors.green,
+        height: 45.0,
+        minWidth: 45.0,
+        onPressed: (){},
+      ),
+        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        color: Colors.white,
+        elevation: 15.0,
+      ),
     );
   }
 }
