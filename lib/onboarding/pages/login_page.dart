@@ -120,27 +120,15 @@ class MyLoginPage extends StatelessWidget {
         height: 45.0,
         minWidth: 45.0,
         onPressed: (){
-           _googleSignIn.signIn().then((result){
-             result.authentication.then((googleKey){
-               _auth.signInWithGoogle(
-                 accessToken: googleKey.accessToken,
-                 idToken: googleKey.idToken,
-
-               ).then((signedInUser){
-                 Navigator.push(context,
-                     MaterialPageRoute(builder: (context)=> HomeScreen())
-                 );
-                 print('Signed In user ${signedInUser.displayName}');
-
-               }).catchError((e){
-                 print(e);
-               });
-             }).catchError((e){
-               print(e);
-             });
-           }).catchError((e){
-             print(e);
-           });
+                _signIn().then((signedInUser){
+                                Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()),
+                            );
+                }).catchError((e){
+                  print(e);
+                });
         },
       ),
         // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -149,4 +137,14 @@ class MyLoginPage extends StatelessWidget {
       ),
     );
   }
+   Future<FirebaseUser> _signIn() async {
+     GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+     GoogleSignInAuthentication authentication = await googleSignInAccount.authentication;
+
+     FirebaseUser user = await _auth.signInWithGoogle(
+       idToken: authentication.idToken,
+       accessToken: authentication.accessToken
+     );
+     return user;
+   }
 }
