@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:salon_app/home/home_screen.dart';
 import 'package:salon_app/onboarding/heading.dart';
 import 'package:salon_app/onboarding/image_with_gradient.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class MyLoginPage extends StatelessWidget {
   final String _subheading;
   final String _backgroundImage;
   final String _footer;
+
+  GoogleSignIn _googleSignIn = new GoogleSignIn();
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   MyLoginPage(this._subheading, this._backgroundImage, this._footer);
 
@@ -27,7 +32,7 @@ class MyLoginPage extends StatelessWidget {
             Text(_subheading,
                 style: TextStyle(fontSize: 30.0, color: Colors.white)),
                 SizedBox(height: 10.0),
-                _GoogleLoginBtn(),
+                _GoogleLoginBtn(context),
                 SizedBox(height: 8.0),
                 Text('OR',
                 style: TextStyle(color: Colors.white),
@@ -91,7 +96,7 @@ class MyLoginPage extends StatelessWidget {
        ),
     );
   }
-  Widget _GoogleLoginBtn(){
+  Widget _GoogleLoginBtn(BuildContext context){
     return Padding(
       padding: EdgeInsets.fromLTRB(40.0, 5.0, 40.0, 0.0),
       child: Material(
@@ -114,7 +119,29 @@ class MyLoginPage extends StatelessWidget {
         splashColor: Colors.green,
         height: 45.0,
         minWidth: 45.0,
-        onPressed: (){},
+        onPressed: (){
+           _googleSignIn.signIn().then((result){
+             result.authentication.then((googleKey){
+               _auth.signInWithGoogle(
+                 accessToken: googleKey.accessToken,
+                 idToken: googleKey.idToken,
+
+               ).then((signedInUser){
+                 Navigator.push(context,
+                     MaterialPageRoute(builder: (context)=> HomeScreen())
+                 );
+                 print('Signed In user ${signedInUser.displayName}');
+
+               }).catchError((e){
+                 print(e);
+               });
+             }).catchError((e){
+               print(e);
+             });
+           }).catchError((e){
+             print(e);
+           });
+        },
       ),
         // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         color: Colors.white,
